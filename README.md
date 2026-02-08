@@ -126,5 +126,3 @@ Example JSON response (posts-per-author):
 Ayakha Mfengwana — Backend Development Intern
 
 ---
-
-If you'd like, I can also run quick local checks or add example responses for each endpoint.
