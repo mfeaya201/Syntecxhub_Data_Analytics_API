@@ -1,0 +1,149 @@
+{
+  "info": {
+    "name": "Data Analytics API - Tests",
+    "_postman_id": "7b9f2d3a-analytics-collection",
+    "description": "Collection to test analytics endpoints and capture proof outputs",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:5000",
+      "type": "string"
+    },
+    {
+      "key": "start",
+      "value": "2024-01-01",
+      "type": "string"
+    },
+    {
+      "key": "end",
+      "value": "2024-03-31",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Posts per Author",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/api/analytics/posts-per-author"
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status code is 200', function () { pm.response.to.have.status(200); });",
+              "pm.test('Response is array', function () { pm.expect(pm.response.json()).to.be.an('array'); });",
+              "pm.test('Items include author and totalPosts (if any)', function () {",
+              "  var json = pm.response.json();",
+              "  if (json.length) {",
+              "    pm.expect(json[0]).to.have.property('author');",
+              "    pm.expect(json[0]).to.have.property('totalPosts');",
+              "  } else {",
+              "    pm.expect(Array.isArray(json)).to.be.true;",
+              "  }",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Posts per Month",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/api/analytics/posts-per-month"
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status code is 200', function () { pm.response.to.have.status(200); });",
+              "pm.test('Response is array with year/month/total fields', function () {",
+              "  var json = pm.response.json();",
+              "  pm.expect(json).to.be.an('array');",
+              "  if (json.length) {",
+              "    pm.expect(json[0]).to.have.property('year');",
+              "    pm.expect(json[0]).to.have.property('month');",
+              "    pm.expect(json[0]).to.have.property('total');",
+              "    pm.expect(json[0]).to.have.property('monthLabel');",
+              "  }",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Posts per Category",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/api/analytics/posts-per-category"
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status code is 200', function () { pm.response.to.have.status(200); });",
+              "pm.test('Response is array with category and total', function () {",
+              "  var json = pm.response.json();",
+              "  pm.expect(json).to.be.an('array');",
+              "  if (json.length) {",
+              "    pm.expect(json[0]).to.have.property('category');",
+              "    pm.expect(json[0]).to.have.property('total');",
+              "  }",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Posts by Date Range",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/api/analytics/posts-by-date?start={{start}}&end={{end}}",
+          "query": [
+            { "key": "start", "value": "{{start}}" },
+            { "key": "end", "value": "{{end}}" }
+          ]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status code is 200', function () { pm.response.to.have.status(200); });",
+              "pm.test('Response has range and results', function () {",
+              "  var json = pm.response.json();",
+              "  pm.expect(json).to.have.property('range');",
+              "  pm.expect(json).to.have.property('results');",
+              "  pm.expect(json.results).to.be.an('array');",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ]
+    }
+  ]
+}
